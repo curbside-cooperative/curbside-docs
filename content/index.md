@@ -12,3 +12,4 @@ Welcome to the documentation site for [Curbside Community Farms Cooperative](htt
 
 > [!NOTE]- About this site
 > This documentation site is built with [Quartz](https://quartz.jzhao.xyz/), a static site generator for Obsidian-style markdown vaults. Content is authored in markdown and published to docs.curbside.coop.
+
