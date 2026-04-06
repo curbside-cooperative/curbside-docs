@@ -1,15 +1,14 @@
 ---
-title: Curbside Community Farms Cooperative
+title: Curbside Docs
+draft: false
+tags:
+permalink:
+date: 2026-02-19
 ---
+# Curbside Document Center
+This is the home of our public documents. Back to [curbside.coop](https://www.curbside.coop/)
 
-# Curbside Docs
-
-Welcome to the documentation site for [Curbside Community Farms Cooperative](https://www.curbside.coop/).
-
-## What's here
-
-- [[pallet-safety-statement|Pallet Wood Safety Statement]] -- Our assessment of chemical and contamination risks in reclaimed pallet wood used for raised garden beds.
-
-> [!NOTE]- About this site
-> This documentation site is built with [Quartz](https://quartz.jzhao.xyz/), a static site generator for Obsidian-style markdown vaults. Content is authored in markdown and published to docs.curbside.coop.
-
+| Document                                     | Description                                                                                                  | Created    |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------- |
+| [[Land Share Agreement]]                     | Specifies the terms of boulevard use between Homeowners, Gardeners, and Curbside.                            | 2026-02-19 |
+| [[Pallet Supplier Liability Waiver - Draft]] | Friendly waiver to hold pallet suppliers harmless for any outcomes associated with the use of their pallets. | 2026-02-23 |
