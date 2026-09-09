@@ -1,0 +1,256 @@
+# yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
+#
+# Curbside Docs — Quartz 5 configuration
+#
+# Ported from the v4 quartz.config.ts + quartz.layout.ts (see
+# existing-repo/curbside-docs/). The port is deliberately faithful: the layout
+# below reproduces v4's stripped-down content page (no breadcrumbs, title,
+# meta, search, explorer, graph, or backlinks) rather than redesigning it.
+configuration:
+  pageTitle: Curbside Docs
+  pageTitleSuffix: ""
+  enableSPA: true
+  enablePopovers: true
+  analytics:
+    provider: plausible
+  locale: en-US
+  baseUrl: docs.curbside.coop
+  ignorePatterns:
+    - private
+    - templates
+    - _templates # Obsidian templates — "templates" alone did not match this in v4
+    - .obsidian
+  theme:
+    fontOrigin: googleFonts
+    cdnCaching: true
+    typography:
+      header: Source Sans 3
+      body: Noto Sans
+      code: IBM Plex Mono
+    colors:
+      lightMode:
+        light: "#faf8f8"
+        lightgray: "#e5e5e5"
+        gray: "#b8b8b8"
+        darkgray: "#4e4e4e"
+        dark: "#2b2b2b"
+        secondary: "#284b63"
+        tertiary: "#84a59d"
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: "#fff23688"
+      darkMode:
+        light: "#161618"
+        lightgray: "#393639"
+        gray: "#646464"
+        darkgray: "#d4d4d4"
+        dark: "#ebebec"
+        secondary: "#7b97aa"
+        tertiary: "#84a59d"
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: "#b3aa0288"
+
+plugins:
+  # ---- transformers ----
+  - source: "@quartz-community/created-modified-date"
+    enabled: true
+    options:
+      defaultDateType: modified
+      priority:
+        - frontmatter
+        - git
+        - filesystem
+    order: 10
+  - source: "@quartz-community/syntax-highlighting"
+    enabled: true
+    options:
+      theme:
+        light: github-light
+        dark: github-dark
+      keepBackground: false
+    order: 20
+  - source: "@quartz-community/obsidian-flavored-markdown"
+    enabled: true
+    options:
+      enableInHtmlEmbed: false
+      enableCheckbox: true
+    order: 30
+  - source: "@quartz-community/github-flavored-markdown"
+    enabled: true
+    order: 40
+  - source: "@quartz-community/table-of-contents"
+    enabled: true
+    order: 50
+    layout:
+      position: right
+      priority: 30
+  - source: "@quartz-community/crawl-links"
+    enabled: true
+    options:
+      markdownLinkResolution: shortest
+    order: 60
+  - source: "@quartz-community/description"
+    enabled: true
+    order: 70
+  - source: "@quartz-community/latex"
+    enabled: true
+    options:
+      renderEngine: katex
+    order: 80
+  - source: "@quartz-community/quartz-fonts"
+    enabled: true
+
+  # ---- custom (local, symlinked from ./plugins) ----
+  - source: ./plugins/signature-lines
+    enabled: true
+    order: 35 # after OFM/GFM parse, before link crawling
+
+  # ---- filters ----
+  - source: "@quartz-community/remove-draft"
+    enabled: true
+
+  # ---- emitters ----
+  - source: "@quartz-community/alias-redirects"
+    enabled: true
+  - source: "@quartz-community/content-index"
+    enabled: true
+    options:
+      enableSiteMap: true
+      enableRSS: true
+  - source: "@quartz-community/favicon"
+    enabled: true
+  - source: "@quartz-community/content-page"
+    enabled: true
+  - source: "@quartz-community/folder-page"
+    enabled: true
+  - source: "@quartz-community/tag-page"
+    enabled: true
+  # v4 had CustomOgImages commented out ("requires network access to fetch fonts")
+  - source: "@quartz-community/og-image"
+    enabled: false
+
+  # ---- components ----
+  # Enabled for folder/tag list pages; stripped from content pages in
+  # layout.byPageType.content below, matching v4.
+  - source: "@quartz-community/page-title"
+    enabled: true
+    layout:
+      position: left
+      priority: 10
+  - source: "@quartz-community/spacer"
+    enabled: true
+    options: {}
+    order: 25
+    layout:
+      position: left
+      priority: 25
+      display: mobile-only
+  - source: "@quartz-community/search"
+    enabled: true
+    layout:
+      position: left
+      priority: 20
+      group: toolbar
+      groupOptions:
+        grow: true
+  - source: "@quartz-community/explorer"
+    enabled: true
+    layout:
+      position: left
+      priority: 50
+  - source: "@quartz-community/breadcrumbs"
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 5
+      condition: not-index
+  - source: "@quartz-community/article-title"
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 10
+  - source: "@quartz-community/content-meta"
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 20
+  - source: "@quartz-community/footer"
+    enabled: true
+    options:
+      links: {}
+    layout:
+      position: footer
+      priority: 50
+
+  # ---- not used in v4 ----
+  - source: "@quartz-community/graph"
+    enabled: false
+  - source: "@quartz-community/backlinks"
+    enabled: false
+  - source: "@quartz-community/darkmode"
+    enabled: false
+  - source: "@quartz-community/reader-mode"
+    enabled: false
+  - source: "@quartz-community/tag-list"
+    enabled: false
+  - source: "@quartz-community/note-properties"
+    enabled: false
+  - source: "@quartz-community/comments"
+    enabled: false
+  - source: "@quartz-community/recent-notes"
+    enabled: false
+  - source: "@quartz-community/stacked-pages"
+    enabled: false
+  - source: "@quartz-community/citations"
+    enabled: false
+  - source: "@quartz-community/hard-line-breaks"
+    enabled: false
+  - source: "@quartz-community/ox-hugo"
+    enabled: false
+  - source: "@quartz-community/roam"
+    enabled: false
+  - source: "@quartz-community/explicit-publish"
+    enabled: false
+  - source: "@quartz-community/canvas-page"
+    enabled: false
+  - source: "@quartz-community/bases-page"
+    enabled: false
+  - source: "@quartz-community/unlisted-pages"
+    enabled: false
+  - source: "@quartz-community/encrypted-pages"
+    enabled: false
+  - source: "@quartz-community/cname"
+    enabled: false # deployed on Vercel, not GitHub Pages
+
+layout:
+  groups:
+    toolbar:
+      priority: 35
+      direction: row
+      gap: 0.5rem
+  byPageType:
+    "404":
+      positions:
+        beforeBody: []
+        left: []
+        right: []
+    # v4's defaultContentPageLayout: only a mobile spacer in the left rail.
+    content:
+      exclude:
+        - page-title
+        - search
+        - explorer
+        - breadcrumbs
+        - article-title
+        - content-meta
+        - table-of-contents
+      positions:
+        right: []
+    # v4's defaultListPageLayout: full chrome, empty right rail.
+    folder:
+      positions:
+        right: []
+    tag:
+      positions:
+        right: []
+    canvas: {}
+    bases: {}

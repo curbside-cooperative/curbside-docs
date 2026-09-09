@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "plugins": {
+    "signature-lines": {
+      "source": "./plugins/signature-lines",
+      "resolved": "/home/ianrd/curbside-docs/site/plugins/signature-lines",
+      "commit": "local",
+      "installedAt": "2026-09-09T19:18:42.249Z"
+    }
+  }
+}

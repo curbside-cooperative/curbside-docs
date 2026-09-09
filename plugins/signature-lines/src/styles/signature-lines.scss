@@ -1,0 +1,47 @@
+// Signature lines and inline blanks.
+//
+// The element is empty; all of its presence comes from the border. Because it
+// is an inline-block rather than a string of characters, `overflow-wrap:
+// break-word` on the surrounding <p> cannot chop it partway through — it wraps
+// as a single unit or not at all.
+
+.sig-line {
+  display: inline-block;
+  width: calc(var(--sig-len, 20) * 1ch);
+  max-width: 100%;
+  border-bottom: 1px solid var(--darkgray);
+  // Sit on the text baseline so the rule aligns with adjacent words.
+  vertical-align: baseline;
+  // An empty inline-block has no line box of its own; this gives it height.
+  height: 1.2em;
+  margin-bottom: -0.2em;
+}
+
+// Blanks inside prose ("made on this ______ day of ____, 2026"). These must NOT
+// stretch — widening them tears the surrounding sentence apart.
+.sig-line--blank {
+  min-width: 4ch;
+}
+
+// Standalone field rules ("Signature: ____________"). These may shrink on
+// narrow screens but keep a usable minimum.
+.sig-line--field {
+  min-width: 8ch;
+}
+
+// These are documents people print and sign on paper.
+@media print {
+  .sig-line {
+    border-bottom-color: #000;
+  }
+
+  .sig-line--field {
+    min-width: 2.5in;
+    height: 2em;
+  }
+
+  // Don't split a signature block across a page boundary.
+  .sig-field {
+    break-inside: avoid;
+  }
+}
