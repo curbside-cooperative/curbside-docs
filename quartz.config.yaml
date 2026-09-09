@@ -235,14 +235,18 @@ layout:
         right: []
     # v4's defaultContentPageLayout: only a mobile spacer in the left rail.
     content:
+      # NOTE: these must be the full source strings, not short names. Quartz's
+      # extractPluginName() (quartz/plugins/loader/config-loader.ts) has no
+      # branch for npm-scoped sources, so it returns "@quartz-community/x"
+      # verbatim and a short name here silently never matches.
       exclude:
-        - page-title
-        - search
-        - explorer
-        - breadcrumbs
-        - article-title
-        - content-meta
-        - table-of-contents
+        - "@quartz-community/page-title"
+        - "@quartz-community/search"
+        - "@quartz-community/explorer"
+        - "@quartz-community/breadcrumbs"
+        - "@quartz-community/article-title"
+        - "@quartz-community/content-meta"
+        - "@quartz-community/table-of-contents"
       positions:
         right: []
     # v4's defaultListPageLayout: full chrome, empty right rail.
