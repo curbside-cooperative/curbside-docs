@@ -117,13 +117,35 @@ restore them.
   `v5.0.0` tag and the current `v5` branch tip, so the config was ported by
   hand.
 
+## Deploying (Vercel)
+
+The build command must be **`npm run build`**, not `npx quartz build`. The
+plugin is compiled TypeScript and `dist/` is gitignored, so a fresh checkout
+has no built plugin. `npm run build` runs `plugins:build` first, then Quartz.
+
+Two things in that script are load-bearing:
+
+- `npm ci --include=dev`. Vercel sets `NODE_ENV=production`, which makes
+  `npm ci` skip devDependencies — and `tsup`, `typescript` and `sass` are
+  devDependencies of the plugin. Without the flag: `tsup: not found`.
+- **A plugin that fails to load does not fail the build.** Quartz prints
+  `✗ Failed to instantiate plugin "signature-lines"` and then `Done`, exit 0.
+  Vercel reports success and the site deploys with raw underscores. That is
+  exactly what happened on the first v5 deploy. If production ever regresses
+  quietly, check the build log for that line first.
+
+The `⚠ Skipping signature-lines: no dist/index.d.ts` warning during
+`prebuild` is harmless — it only affects a type re-export; the plugin loads
+fine once `dist/` exists a step later. The lockfile's absolute `resolved`
+path is also harmless: the symlink is re-created from the config's relative
+`source` at build time.
+
+Verified from a clean checkout (no plugin `node_modules`/`dist`, no
+`.quartz/`) four times, with and without `NODE_ENV=production`.
+
 ## Open
 
-- **Deploy is not wired up.** `vercel.json` and the four GitHub workflows from
-  v4 have not been carried over or re-checked against v5's build. The local
-  plugin's absolute-path lockfile entry needs solving first — either extract
-  the plugin to its own repo and reference it as `github:`, or have CI run
-  `plugin install --from-config`.
+- **Layout** — see the next bullet.
 - **Layout is a faithful port of v4**, which means content pages have no
   navigation at all — no breadcrumbs, title, search, explorer, or sidebars.
   That was deliberate in v4 but is worth revisiting now; it is a one-line
