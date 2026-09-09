@@ -30,6 +30,24 @@ intent, and the real documents are cleanly bimodal — inline blanks run 6–12
 characters, field rules 22–52, with nothing in between. `fieldRuleMinLength`
 defaults to 16, in the middle of that gap.
 
+## Placeholder labels
+
+On a phone, a long rule usually wraps onto its own line beneath its label —
+where it looks like a horizontal rule, not an input. A placeholder fixes
+that. Author it in braces immediately after the underscores, no space:
+
+```
+i) The Gardener (name): ________________________{Gardener's name}
+Gardener signature: ________________{Signature} Date: __________{Date}
+made on this ______{day} day of ________{month}, 2026
+```
+
+On screen the label is rendered in grey inside the rule; in print it is
+hidden and the rule is blank. Braces are inert in Markdown and Obsidian, so
+the source still previews as a blank. The braces must touch the underscores:
+`______ ("Supplier")` is prose and is left alone. Unlabelled runs keep
+working, so labels can be added incrementally.
+
 ## Options
 
 | Option               | Default | Meaning                                        |

@@ -120,6 +120,59 @@ describe("SignatureLines", () => {
     expect(second).not.toContain("____");
   });
 
+  describe("placeholder labels", () => {
+    it("renders a label inside the rule as real text", () => {
+      const html = render(`Gardener signature: ${FIELD_RULE}{Signature}`);
+      expect(html).toContain("sig-line--labelled");
+      expect(html).toContain('<span class="sig-line__label">Signature</span>');
+      expect(html).not.toContain("{Signature}");
+    });
+
+    it("does not hide a labelled rule from assistive technology", () => {
+      const html = render(`Signature: ${FIELD_RULE}{Signature}`);
+      expect(html).not.toContain("aria-hidden");
+    });
+
+    it("still hides unlabelled rules", () => {
+      const html = render(`Signature: ${FIELD_RULE}`);
+      expect(html).toContain('aria-hidden="true"');
+    });
+
+    it("treats empty braces as no label", () => {
+      const html = render(`Signature: ${FIELD_RULE}{}`);
+      expect(html).not.toContain("sig-line--labelled");
+      expect(html).not.toContain("sig-line__label");
+      expect(html).not.toContain("{}");
+    });
+
+    it("keeps prose that follows a rule, including parentheses", () => {
+      // Real line from the waiver — the parenthetical is content, not a label.
+      const html = render(`**Between:** ${"_".repeat(40)} ("Supplier")`);
+      expect(html).toContain('("Supplier")');
+      expect(html).not.toContain("sig-line--labelled");
+    });
+
+    it("requires the braces to touch the underscores", () => {
+      const html = render(`${FIELD_RULE} {not a label}`);
+      expect(html).not.toContain("sig-line--labelled");
+      expect(html).toContain("{not a label}");
+    });
+
+    it("keeps punctuation after a labelled blank", () => {
+      const html = render(`made on this ${INLINE_SHORT}{day} day of ${INLINE_MED}{month}, 2026`);
+      expect(html).toContain(">day</span>");
+      expect(html).toContain(">month</span>");
+      expect(html).toContain("</span>, 2026");
+    });
+
+    it("labels both fields on a two-field line", () => {
+      const html = render(`Gardener signature: ${FIELD_RULE}{Signature} Date: ${DATE_FIELD}{Date}`);
+      expect(html.match(/sig-line__label/g)?.length).toBe(2);
+      expect(html).toContain("Gardener signature:");
+      expect(html).toContain(" Date: ");
+    });
+  });
+
   it("emits inline CSS as an external resource", () => {
     const plugin = SignatureLines();
     const resources = plugin.externalResources?.(undefined as never);

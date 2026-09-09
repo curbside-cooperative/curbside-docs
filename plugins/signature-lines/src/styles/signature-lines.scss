@@ -1,20 +1,24 @@
 // Signature lines and inline blanks.
 //
-// The element is empty; all of its presence comes from the border. Because it
-// is an inline-block rather than a string of characters, `overflow-wrap:
-// break-word` on the surrounding <p> cannot chop it partway through — it wraps
-// as a single unit or not at all.
+// The element is drawn with a border, not characters. Because it is an
+// inline-block rather than a string of text, `overflow-wrap: break-word` on
+// the surrounding <p> cannot chop it partway through — it wraps as a single
+// unit or not at all.
 
 .sig-line {
   display: inline-block;
+  box-sizing: border-box;
   width: calc(var(--sig-len, 20) * 1ch);
   max-width: 100%;
   border-bottom: 1px solid var(--darkgray);
   // Sit on the text baseline so the rule aligns with adjacent words.
   vertical-align: baseline;
-  // An empty inline-block has no line box of its own; this gives it height.
   height: 1.2em;
+  line-height: 1.2em;
   margin-bottom: -0.2em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // Blanks inside prose ("made on this ______ day of ____, 2026"). These must NOT
@@ -29,7 +33,21 @@
   min-width: 8ch;
 }
 
-// These are documents people print and sign on paper.
+// A labelled rule is never narrower than its label. On a narrow screen this
+// is what lets it wrap whole onto its own line and still read as a field.
+.sig-line--labelled {
+  min-width: max-content;
+}
+
+.sig-line__label {
+  padding: 0 0.5ch;
+  font-size: 0.85em;
+  font-style: italic;
+  color: var(--gray);
+  user-select: none;
+}
+
+// These are documents people print and sign on paper: blank rules, no hints.
 @media print {
   .sig-line {
     border-bottom-color: #000;
@@ -38,6 +56,10 @@
   .sig-line--field {
     min-width: 2.5in;
     height: 2em;
+  }
+
+  .sig-line__label {
+    display: none;
   }
 
   // Don't split a signature block across a page boundary.

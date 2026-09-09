@@ -10,17 +10,17 @@ date:
 
 ---
 # LAND SHARE AGREEMENT (DRAFT)
-This Agreement is made on this ______ day of ________, 2026, between the following parties to establish a collaborative food garden on the municipal boulevard adjacent to the Homeowner’s property. This Agreement shall be valid from the time of signing through the 31st of October, 2026 ("the Season").   
+This Agreement is made on this ______{day} day of ________{month}, 2026, between the following parties to establish a collaborative food garden on the municipal boulevard adjacent to the Homeowner’s property. This Agreement shall be valid from the time of signing through the 31st of October, 2026 ("the Season").   
 
 ## 1. THE PARTIES
-i) The Gardener (name): ________________________________________________   
-ii) The Homeowner (name): ________________________________________________   
+i) The Gardener (name): ________________________________________________{Gardener's name}   
+ii) The Homeowner (name): ________________________________________________{Homeowner's name}   
 iii) Curbside Community Farms Cooperative (“Curbside”)   
 
 ## 2. SITE DESCRIPTION
 This Agreement pertains to the raised garden beds and their contents (in totality, "the Garden") which are to be established on the boulevard immediately in front of the Homeowner's property ("the Boulevard") in the municipality of Victoria, British Columbia.    
 
-Address of property abutting the Boulevard: ________________________________________________   
+Address of property abutting the Boulevard: ________________________________________________{Address}   
 
 ## 3. BOULEVARD ACCESS
 The Homeowner agrees to provide the Curbside staff and Gardener with reasonable access to the Boulevard for the purpose of establishing a garden.
@@ -29,7 +29,7 @@ The Homeowner agrees to provide the Curbside staff and Gardener with reasonable 
 The Homeowner agrees to provide Curbside staff and the Gardener with reasonable access to an outdoor water source (e.g., spigot or hose) to be used exclusively for the cultivation of plants in the Garden, subject to the following terms.    
 
 ### 4.1 Hours of access
-The Gardener may access the spigot or hose between the hours of ____________ and ____________. 
+The Gardener may access the spigot or hose between the hours of ____________{start} and ____________{end}. 
 
 ### 4.2 Purpose of access
 The Gardener may only access the spigot or hose for the purpose of watering the Garden.
@@ -85,8 +85,8 @@ All parties agree that, in the event of damage to the Garden due to natural caus
 
 ## SIGNATURES
 
-Gardener signature: ____________________________________________________ Date: ______________________
+Gardener signature: ____________________________________________________{Signature} Date: ______________________{Date}
 
-Homeowner signature: _________________________________________________ Date: ______________________
+Homeowner signature: _________________________________________________{Signature} Date: ______________________{Date}
 
-Curbside board member signature: ____________________________________ Date: ______________________
+Curbside board member signature: ____________________________________{Signature} Date: ______________________{Date}
