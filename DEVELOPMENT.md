@@ -78,6 +78,20 @@ path. A build on another machine fails with "local path missing". The
 `plugin install --from-config` is the path that works elsewhere. Resolve this
 properly before wiring up the deploy — see below.
 
+**`note-properties` is the frontmatter parser.** It is v5's rename of v4's
+`Plugin.FrontMatter()` with a properties panel bolted on. Disable it and
+`---` blocks render as body text, every `<title>` becomes "Untitled", and
+`draft`, `date`, `permalink` and `aliases` are silently ignored. It is enabled
+with `hidePropertiesView: true` to match v4.
+
+**A `permalink` equal to the page's own slug deletes the page.** v5 lowercases
+slugs, and treats `permalink` as an extra alias. `alias-redirects` has no
+guard for an alias that matches the page's own path, so it overwrites the real
+HTML with a 278-byte redirect-to-self stub. `Land Share Agreement.md` had
+`permalink: land-share-agreement` from v4 (where slugs kept their case) and
+lost its content this way. Leave `permalink:` empty unless it differs from the
+slug. Worth reporting upstream alongside the `extractPluginName` one.
+
 **`.gitignore` is itself gitignored** by upstream's root `.gitignore`. New
 ignore rules need `git add -f`.
 

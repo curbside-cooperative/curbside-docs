@@ -1,7 +1,7 @@
 ---
 title: Land Share Agreement (Draft)
 description:
-permalink: land-share-agreement
+permalink:
 draft: false
 tags:
 date:

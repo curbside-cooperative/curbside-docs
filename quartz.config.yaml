@@ -51,6 +51,19 @@ configuration:
 
 plugins:
   # ---- transformers ----
+  # v5's rename of v4's Plugin.FrontMatter(). It is the ONLY frontmatter parser;
+  # without it "---" blocks render as body text and title/permalink/draft/date
+  # are never read. The properties panel it bolts on is hidden to match v4.
+  - source: "@quartz-community/note-properties"
+    enabled: true
+    options:
+      hidePropertiesView: true
+      includeAll: false
+      includedProperties: []
+      excludedProperties: []
+      delimiters: ---
+      language: yaml
+    order: 5
   - source: "@quartz-community/created-modified-date"
     enabled: true
     options:
@@ -191,8 +204,6 @@ plugins:
   - source: "@quartz-community/reader-mode"
     enabled: false
   - source: "@quartz-community/tag-list"
-    enabled: false
-  - source: "@quartz-community/note-properties"
     enabled: false
   - source: "@quartz-community/comments"
     enabled: false
