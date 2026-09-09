@@ -83,6 +83,10 @@ ignore rules need `git add -f`.
 
 **`plugin resolve` is deprecated** in favour of `plugin install --from-config`.
 
+**`plugin install` prunes the plugin's devDependencies**, so `npm test` in the
+plugin then fails with `vitest: not found`. Re-run `npm run plugins:build` to
+restore them.
+
 ## Resolved from the previous handoff
 
 - **`--serve` works** on ext4 with no `-o /native/path` workaround. No `EIO`

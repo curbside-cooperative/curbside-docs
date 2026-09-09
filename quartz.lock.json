@@ -3,9 +3,9 @@
   "plugins": {
     "signature-lines": {
       "source": "./plugins/signature-lines",
-      "resolved": "/home/ianrd/curbside-docs/site/plugins/signature-lines",
+      "resolved": "/home/ianrd/curbside-docs/plugins/signature-lines",
       "commit": "local",
-      "installedAt": "2026-09-09T19:25:23.272Z"
+      "installedAt": "2026-09-09T19:53:12.025Z"
     }
   }
 }
