@@ -33,7 +33,7 @@
   left: 0;
   right: 0;
   top: 100%;
-  margin-top: var(--sig-rule-drop, 0.12em);
+  margin-top: var(--sig-rule-drop, -0.12em);
   border-bottom: 1px solid var(--darkgray);
 }
 
