@@ -13,12 +13,12 @@
   border-bottom: 1px solid var(--darkgray);
   // Sit on the text baseline so the placeholder aligns with adjacent words.
   vertical-align: baseline;
-  // A tight line box puts the rule (the box's bottom edge) just below the
-  // baseline rather than below the descenders, so handwriting descenders cut
-  // across the line the way they do on paper. Raise `line-height` to push
-  // the rule down; lower it to bring it up.
+  // A tight line box keeps the box hugging the glyphs; `--sig-rule-drop` then
+  // sets how far the rule sits BELOW the baseline. Larger drops the rule
+  // toward the descender tips, smaller pulls it up into the letters, so
+  // handwriting descenders cut across the line the way ink does on paper.
   line-height: 1;
-  min-height: 1em; // empty (unlabelled) rules still need a box to draw
+  padding-bottom: var(--sig-rule-drop, 0.12em);
   white-space: nowrap;
   // No `overflow` here: any value other than `visible` makes an inline-block's
   // baseline its bottom margin edge instead of its text baseline, which lifts
@@ -29,6 +29,13 @@
 // stretch — widening them tears the surrounding sentence apart.
 .sig-line--blank {
   min-width: 4ch;
+}
+
+// An unlabelled rule has no content, so it needs an explicit height to draw.
+// Never apply this to a labelled rule: it pins the box and stops
+// --sig-rule-drop from moving the rule.
+.sig-line:not(.sig-line--labelled) {
+  min-height: 1em;
 }
 
 // Standalone field rules ("Signature: ____________"). These may shrink on

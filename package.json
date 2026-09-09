@@ -22,7 +22,8 @@
     "prebuild": "npm run install-plugins",
     "plugins:build": "npm --prefix plugins/signature-lines ci --include=dev && npm --prefix plugins/signature-lines run build",
     "plugins:test": "npm --prefix plugins/signature-lines test",
-    "build": "npm run plugins:build && npx quartz build"
+    "build": "npm run plugins:build && npx quartz build",
+    "dev": "npm run plugins:build && npx quartz build --serve --port 8080"
   },
   "engines": {
     "npm": ">=10.9.2",
