@@ -11,11 +11,14 @@
   width: calc(var(--sig-len, 20) * 1ch);
   max-width: 100%;
   border-bottom: 1px solid var(--darkgray);
-  // Sit on the text baseline so the rule aligns with adjacent words.
+  // Sit on the text baseline so the placeholder aligns with adjacent words.
   vertical-align: baseline;
-  height: 1.2em;
-  line-height: 1.2em;
-  margin-bottom: -0.2em;
+  // A tight line box puts the rule (the box's bottom edge) just below the
+  // baseline rather than below the descenders, so handwriting descenders cut
+  // across the line the way they do on paper. Raise `line-height` to push
+  // the rule down; lower it to bring it up.
+  line-height: 1;
+  min-height: 1em; // empty (unlabelled) rules still need a box to draw
   white-space: nowrap;
   // No `overflow` here: any value other than `visible` makes an inline-block's
   // baseline its bottom margin edge instead of its text baseline, which lifts
@@ -45,7 +48,9 @@
 // font-family is appended by the plugin from its `placeholderFont` option.
 .sig-line__label {
   padding: 0 0.5ch;
-  font-size: 1em;
+  // Handwriting faces have small x-heights; a little over 1em reads as body
+  // size next to the prose.
+  font-size: 1.15em;
   color: var(--gray);
   user-select: none;
 }
