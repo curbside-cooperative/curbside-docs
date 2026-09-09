@@ -173,10 +173,27 @@ describe("SignatureLines", () => {
     });
   });
 
-  it("emits inline CSS as an external resource", () => {
+  it("emits the placeholder font stylesheet plus inline CSS", () => {
     const plugin = SignatureLines();
     const resources = plugin.externalResources?.(undefined as never);
+    expect(resources?.css?.length).toBe(2);
+    expect(resources?.css?.[0]?.content).toBe(
+      "https://fonts.googleapis.com/css2?family=Caveat&display=swap",
+    );
+    expect(resources?.css?.[1]).toMatchObject({ inline: true });
+    expect(resources?.css?.[1]?.content).toContain('font-family:"Caveat",cursive');
+  });
+
+  it("encodes multi-word font families for Google Fonts", () => {
+    const plugin = SignatureLines({ placeholderFont: "Patrick Hand" });
+    const resources = plugin.externalResources?.(undefined as never);
+    expect(resources?.css?.[0]?.content).toContain("family=Patrick+Hand");
+  });
+
+  it("loads no font when placeholderFont is null", () => {
+    const plugin = SignatureLines({ placeholderFont: null });
+    const resources = plugin.externalResources?.(undefined as never);
     expect(resources?.css?.length).toBe(1);
-    expect(resources?.css?.[0]).toMatchObject({ inline: true });
+    expect(resources?.css?.[0]?.content).not.toContain("font-family");
   });
 });

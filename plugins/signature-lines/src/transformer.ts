@@ -15,6 +15,7 @@ const defaultOptions: SignatureLinesOptions = {
   fieldRuleMinLength: 16,
   minRunLength: 3,
   ariaHidden: true,
+  placeholderFont: "Caveat",
 };
 
 /**
@@ -102,8 +103,19 @@ export const SignatureLines: QuartzTransformerPlugin<Partial<SignatureLinesOptio
       return [remarkSignatureLines(options)];
     },
     externalResources() {
+      const font = options.placeholderFont;
+      if (!font) {
+        return { css: [{ content: styles, inline: true }] };
+      }
+      const family = encodeURIComponent(font).replace(/%20/g, "+");
       return {
-        css: [{ content: styles, inline: true }],
+        css: [
+          { content: `https://fonts.googleapis.com/css2?family=${family}&display=swap` },
+          {
+            content: `${styles}\n.sig-line__label{font-family:"${font}",cursive}`,
+            inline: true,
+          },
+        ],
       };
     },
   };

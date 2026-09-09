@@ -1,9 +1,9 @@
 # Pallet Donation & Liability Waiver
 
-**Between:** ________________________________________{Supplier's name} ("Supplier")
+**Between:** ________________________________________{Acme Pallets Ltd.} ("Supplier")
 **And:** Curbside Community Farms Cooperative ("Curbside" / "we" / "us")
 
-**Date:** ________________________________________{Date}
+**Date:** ________________________________________{May 15, 2026}
 
 ---
 
@@ -56,25 +56,25 @@ This agreement does not obligate the Supplier to provide any specific quantity o
 
 **For Curbside:**
 
-Name: ________________________________________{Name}
+Name: ________________________________________{Alex Rivera}
 
-Signature: ________________________________________{Signature}
+Signature: ________________________________________{Alex Rivera}
 
-Date: ________________________________________{Date}
+Date: ________________________________________{May 15, 2026}
 
-Title/Role: ________________________________________{Title or role}
+Title/Role: ________________________________________{Board Member}
 
 &nbsp;
 
 **For Supplier:**
 
-Name: ________________________________________{Name}
+Name: ________________________________________{Sam Patel}
 
-Signature: ________________________________________{Signature}
+Signature: ________________________________________{Sam Patel}
 
-Date: ________________________________________{Date}
+Date: ________________________________________{May 15, 2026}
 
-Company (if applicable): ________________________________________{Company}
+Company (if applicable): ________________________________________{Acme Pallets Ltd.}
 
 ---
 

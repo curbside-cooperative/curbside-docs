@@ -25,6 +25,13 @@ export interface SignatureLinesOptions {
    * ..."); the adjacent label ("Signature:") carries the meaning.
    */
   ariaHidden: boolean;
+
+  /**
+   * Google Fonts family used for placeholder text, e.g. "Caveat". The font's
+   * stylesheet is added as an external resource. `null` inherits the body
+   * font and loads nothing.
+   */
+  placeholderFont: string | null;
 }
 
 export type SignatureLineKind = "blank" | "field";

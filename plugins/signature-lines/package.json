@@ -83,7 +83,8 @@
     "defaultOptions": {
       "fieldRuleMinLength": 16,
       "minRunLength": 3,
-      "ariaHidden": true
+      "ariaHidden": true,
+      "placeholderFont": "Caveat"
     },
     "optionSchema": {
       "fieldRuleMinLength": {
@@ -94,6 +95,9 @@
       },
       "ariaHidden": {
         "type": "boolean"
+      },
+      "placeholderFont": {
+        "type": "string"
       }
     }
   },

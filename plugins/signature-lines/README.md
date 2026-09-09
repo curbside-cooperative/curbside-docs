@@ -37,13 +37,15 @@ where it looks like a horizontal rule, not an input. A placeholder fixes
 that. Author it in braces immediately after the underscores, no space:
 
 ```
-i) The Gardener (name): ________________________{Gardener's name}
-Gardener signature: ________________{Signature} Date: __________{Date}
-made on this ______{day} day of ________{month}, 2026
+i) The Gardener (name): ________________________{Jane Doe}
+Gardener signature: ________________{Jane Doe} Date: __________{May 15, 2026}
+made on this ______{15th} day of ________{May}, 2026
 ```
 
-On screen the label is rendered in grey inside the rule; in print it is
-hidden and the rule is blank. Braces are inert in Markdown and Obsidian, so
+Use *sample data*, not field names: the document should read as a filled-in
+copy. On screen the placeholder is rendered in grey in a handwritten face
+(`placeholderFont`, default Caveat from Google Fonts) at body size, sharing
+the prose baseline; in print it is hidden and the rule is blank. Braces are inert in Markdown and Obsidian, so
 the source still previews as a blank. The braces must touch the underscores:
 `______ ("Supplier")` is prose and is left alone. Unlabelled runs keep
 working, so labels can be added incrementally.
@@ -54,7 +56,8 @@ working, so labels can be added incrementally.
 | -------------------- | ------- | ---------------------------------------------- |
 | `fieldRuleMinLength` | `16`    | At or above this length, a run is a field rule |
 | `minRunLength`       | `3`     | Shorter runs are left as literal text          |
-| `ariaHidden`         | `true`  | Hide rules from screen readers                 |
+| `ariaHidden`         | `true`  | Hide *unlabelled* rules from screen readers    |
+| `placeholderFont`    | `Caveat`| Google Fonts family for placeholders; `null` inherits |
 
 Set them under `options:` in `quartz.config.yaml`. Note that
 `quartz.defaultOptions` in `package.json` overrides the defaults in

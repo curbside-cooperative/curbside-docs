@@ -17,8 +17,9 @@
   line-height: 1.2em;
   margin-bottom: -0.2em;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  // No `overflow` here: any value other than `visible` makes an inline-block's
+  // baseline its bottom margin edge instead of its text baseline, which lifts
+  // the placeholder off the line the surrounding prose sits on.
 }
 
 // Blanks inside prose ("made on this ______ day of ____, 2026"). These must NOT
@@ -39,10 +40,12 @@
   min-width: max-content;
 }
 
+// Placeholder text: sample data in a handwritten face, same size as the prose
+// and sharing its baseline so the line reads smoothly when scanned. The
+// font-family is appended by the plugin from its `placeholderFont` option.
 .sig-line__label {
   padding: 0 0.5ch;
-  font-size: 0.85em;
-  font-style: italic;
+  font-size: 1em;
   color: var(--gray);
   user-select: none;
 }
