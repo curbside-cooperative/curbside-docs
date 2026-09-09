@@ -7,22 +7,34 @@
 
 .sig-line {
   display: inline-block;
+  position: relative; // anchor for the rule, drawn as ::after
   box-sizing: border-box;
   width: calc(var(--sig-len, 20) * 1ch);
   max-width: 100%;
-  border-bottom: 1px solid var(--darkgray);
   // Sit on the text baseline so the placeholder aligns with adjacent words.
   vertical-align: baseline;
-  // A tight line box keeps the box hugging the glyphs; `--sig-rule-drop` then
-  // sets how far the rule sits BELOW the baseline. Larger drops the rule
-  // toward the descender tips, smaller pulls it up into the letters, so
-  // handwriting descenders cut across the line the way ink does on paper.
+  // A tight line box keeps the element hugging its glyphs.
   line-height: 1;
-  padding-bottom: var(--sig-rule-drop, 0.12em);
   white-space: nowrap;
   // No `overflow` here: any value other than `visible` makes an inline-block's
   // baseline its bottom margin edge instead of its text baseline, which lifts
   // the placeholder off the line the surrounding prose sits on.
+}
+
+// The rule is a positioned pseudo-element rather than a border on the box, so
+// its offset can go NEGATIVE and ride up into the letters. `--sig-rule-drop`
+// is the distance below the element's bottom edge: larger drops the rule
+// toward the descender tips, 0 sits at the glyph bottom, and negative values
+// pull it up through the text. Being absolutely positioned, it takes no part
+// in layout.
+.sig-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: var(--sig-rule-drop, 0.12em);
+  border-bottom: 1px solid var(--darkgray);
 }
 
 // Blanks inside prose ("made on this ______ day of ____, 2026"). These must NOT
@@ -64,7 +76,7 @@
 
 // These are documents people print and sign on paper: blank rules, no hints.
 @media print {
-  .sig-line {
+  .sig-line::after {
     border-bottom-color: #000;
   }
 
