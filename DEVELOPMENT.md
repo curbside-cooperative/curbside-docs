@@ -24,8 +24,10 @@ npx quartz build --serve --port 8080
 ```
 site/
 ├── content/                  # the documents (8 files)
+├── imports/                  # gitignored; raw Google Docs exports
 ├── plugins/
-│   └── signature-lines/      # local plugin package, symlinked into .quartz/
+│   └── signature-lines/      # local plugin: signature lines + {{markers}}
+├── scripts/import-gdoc/      # Google Docs export → content/ page
 ├── quartz/                   # upstream engine — do not edit
 ├── quartz.config.yaml        # config + layout (replaces v4's two .ts files)
 ├── quartz.lock.json          # plugin versions
@@ -35,6 +37,40 @@ site/
 `upstream` points at `jackyzha0/quartz`, and this branch descends from it, so
 `npx quartz upgrade` works. The v4 repo was vendored with no shared ancestry,
 which is why upgrading was impossible before.
+
+## Importing from Google Docs
+
+Documents are written collaboratively in Google Docs and imported here.
+
+1. In Docs: **File → Download → Markdown**. Put the export in `imports/`
+   (gitignored) or anywhere else.
+2. `npm run import -- "imports/Membership Agreement (General)(5).md"`
+3. Review with `git diff`, then commit.
+
+The importer (`scripts/import-gdoc/`) is deterministic and never rewrites
+prose. It strips browser suffixes like `(5)` from the filename, keeps the
+existing page's frontmatter (new pages start as `draft: true`), drops empty
+headings, unwraps `### **Bold**` headings, tightens Docs' loose lists, and
+unescapes underscore runs so they become signature lines. Google's other
+escapes stay; `\$` in particular stops LaTeX from eating `$10 … $10`.
+Running the importer on its own output changes nothing. Tests:
+`npm run import:test`.
+
+Markers are typed in the Doc for things the Markdown export can't express.
+The importer rejects unknown or misplaced ones:
+
+- `{{page_break}}` on a line of its own: a divider on screen, a page break
+  in print.
+- `{{2.4}}` at the end of a heading: a section ID. It identifies the section
+  across versions, so a renamed heading isn't read as a delete plus an add.
+  An ID is an identity, not a position: never renumber existing sections;
+  give a new one an unused ID even if it sits between others. Duplicate IDs
+  are an error.
+
+**Change justifications are Google Docs comments.** When you change the Doc,
+comment on the change with the reason. At publish time, copy the comments
+into the pipeline and resolve them in the Doc. (Versioned publishing isn't
+built yet; this is the agreed input for it.)
 
 ## Plugin development loop
 

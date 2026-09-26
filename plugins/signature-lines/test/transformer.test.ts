@@ -173,6 +173,85 @@ describe("SignatureLines", () => {
     });
   });
 
+  describe("signature blocks", () => {
+    // Verbatim shape of the Google Docs export: hard breaks, uneven runs.
+    const MEMBER = [
+      "Name (please print): ___________________________  ",
+      "Signature: ____________________________  ",
+      "Date: ______________",
+    ].join("\n");
+
+    it("groups consecutive label-and-rule lines into one block", () => {
+      const html = render(MEMBER);
+      expect(html.match(/class="sig-block"/g)?.length).toBe(1);
+      expect(html.match(/sig-block__label/g)?.length).toBe(3);
+      expect(html).not.toContain("<p>");
+      expect(html).not.toContain("<br>");
+    });
+
+    it("makes every rule in a block a field, whatever its length", () => {
+      const html = render(MEMBER);
+      expect(html).not.toContain("sig-line--blank");
+      expect(html.match(/sig-line--field/g)?.length).toBe(3);
+    });
+
+    it("accepts labels with no space before the rule", () => {
+      const html = render("Board member name:______________  \nSignature:______________");
+      expect(html).toContain('<span class="sig-block__label">Board member name:</span>');
+    });
+
+    it("groups lines written as separate paragraphs", () => {
+      const html = render(`Name: ${FIELD_RULE}{Alex}\n\nSignature: ${FIELD_RULE}\n\nDate: ${DATE_FIELD}`);
+      expect(html.match(/class="sig-block"/g)?.length).toBe(1);
+      expect(html).toContain(">Alex</span>");
+    });
+
+    it("keeps formatting in labels", () => {
+      const html = render(`**Name:** ${FIELD_RULE}  \n**Date:** ${DATE_FIELD}`);
+      expect(html).toContain('<span class="sig-block__label"><strong>Name:</strong></span>');
+    });
+
+    it("leaves a lone field line alone", () => {
+      const html = render(`Signature: ${FIELD_RULE}`);
+      expect(html).not.toContain("sig-block");
+      expect(html).toContain("<p>");
+    });
+
+    it("leaves lines with prose or a second field after the rule alone", () => {
+      expect(render(`Gardener signature: ${FIELD_RULE} Date: ${DATE_FIELD}  \nHomeowner signature: ${FIELD_RULE} Date: ${DATE_FIELD}`)).not.toContain("sig-block");
+      expect(render(`**Between:** ${FIELD_RULE} ("Supplier")  \n**And:** ${FIELD_RULE}`)).not.toContain("sig-block");
+    });
+
+    it("needs a label on every line", () => {
+      expect(render(`Name: ${FIELD_RULE}  \n${FIELD_RULE}`)).not.toContain("sig-block");
+    });
+
+    it("finds blocks inside list items and blockquotes", () => {
+      expect(render(`> Name: ${FIELD_RULE}  \n> Date: ${DATE_FIELD}`)).toContain("sig-block");
+    });
+  });
+
+  describe("markers", () => {
+    it("moves a heading's section ID onto a data attribute", () => {
+      const html = render("### Termination {{2.4}}");
+      expect(html).toBe('<h3 data-section="2.4">Termination</h3>');
+    });
+
+    it("leaves braces elsewhere in a heading alone", () => {
+      expect(render("## Using {{x}} in prose")).toBe("<h2>Using {{x}} in prose</h2>");
+    });
+
+    it("renders a page break", () => {
+      const html = render("before\n\n{{page_break}}\n\nafter");
+      expect(html).toContain('<div class="page-break" role="separator"></div>');
+      expect(html).not.toContain("page_break}}");
+    });
+
+    it("ignores a page break marker inside prose", () => {
+      expect(render("see {{page_break}} here")).toContain("{{page_break}}");
+    });
+  });
+
   it("emits the placeholder font stylesheet plus inline CSS", () => {
     const plugin = SignatureLines();
     const resources = plugin.externalResources?.(undefined as never);

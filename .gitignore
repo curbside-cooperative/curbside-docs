@@ -12,3 +12,5 @@ replit.nix
 .quartz/
 quartz/cli/tui/dist/
 .turbo/
+# Raw Google Docs exports, before `npm run import`
+imports/

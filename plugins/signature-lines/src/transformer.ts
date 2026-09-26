@@ -1,5 +1,5 @@
 import type { PluggableList, Plugin } from "unified";
-import type { Root as MdastRoot } from "mdast";
+import type { Paragraph, PhrasingContent, Root as MdastRoot } from "mdast";
 import type { ElementContent } from "hast";
 import type { VFile } from "vfile";
 import { findAndReplace } from "mdast-util-find-and-replace";
@@ -8,7 +8,10 @@ import type {
   SignatureLinesOptions,
   SignatureLineKind,
   SignatureLineNode,
+  SignatureBlockNode,
+  SignatureBlockLabelNode,
 } from "./types";
+import { remarkMarkers } from "./markers";
 import styles from "./styles/signature-lines.scss";
 
 const defaultOptions: SignatureLinesOptions = {
@@ -87,8 +90,113 @@ const remarkSignatureLines = (options: SignatureLinesOptions): Plugin<[], MdastR
         },
       ],
     ]);
+    groupSignatureBlocks(tree);
   };
 };
+
+type Parent = { children: unknown[] };
+
+/**
+ * A signature block is two or more consecutive lines that each read
+ * `Label: ________`: a label, one rule, and nothing after it. The lines may be
+ * joined by hard breaks or be separate paragraphs.
+ *
+ * Its rules are laid out on a grid so they all end at the same position. The
+ * run lengths are ignored, because in a block they're whatever the author
+ * happened to type.
+ */
+function groupSignatureBlocks(parent: Parent) {
+  const out: unknown[] = [];
+  let pending: Array<{ label: PhrasingContent[]; rule: SignatureLineNode }> = [];
+
+  const flush = (tail: Paragraph[]) => {
+    if (pending.length >= 2) out.push(signatureBlock(pending));
+    else out.push(...tail);
+    pending = [];
+  };
+  let held: Paragraph[] = [];
+
+  for (const child of parent.children) {
+    const lines = isParagraph(child) ? signatureLines(child) : null;
+    if (lines) {
+      pending.push(...lines);
+      held.push(child as Paragraph);
+      continue;
+    }
+    flush(held);
+    held = [];
+    if (hasChildren(child)) groupSignatureBlocks(child);
+    out.push(child);
+  }
+  flush(held);
+  parent.children = out;
+}
+
+/** Splits a paragraph at hard breaks; null unless every line is `Label: ____`. */
+function signatureLines(paragraph: Paragraph) {
+  const lines: PhrasingContent[][] = [[]];
+  for (const node of paragraph.children) {
+    if (node.type === "break") lines.push([]);
+    else lines.at(-1)!.push(node);
+  }
+
+  const result = [];
+  for (const line of lines) {
+    const nodes = trimEnd(line);
+    const rule = nodes.at(-1) as unknown as SignatureLineNode | undefined;
+    if (rule?.type !== "signatureLine") return null;
+    const label = trimEnd(nodes.slice(0, -1));
+    if (label.some((n) => n.type === ("signatureLine" as string))) return null;
+    if (!label.some((n) => n.type !== "text" || n.value.trim())) return null;
+    result.push({ label, rule });
+  }
+  return result;
+}
+
+function signatureBlock(lines: Array<{ label: PhrasingContent[]; rule: SignatureLineNode }>) {
+  const children = lines.flatMap(({ label, rule }) => {
+    const labelNode: SignatureBlockLabelNode = {
+      type: "signatureBlockLabel",
+      data: { hName: "span", hProperties: { className: ["sig-block__label"] } },
+      children: label,
+    };
+    // Every rule in a block is a field, whatever its length.
+    const props = (rule.data as { hProperties: { className: string[] } }).hProperties;
+    props.className = props.className.map((c) =>
+      c === "sig-line--blank" ? "sig-line--field" : c,
+    );
+    return [labelNode, rule];
+  });
+
+  const block: SignatureBlockNode = {
+    type: "signatureBlock",
+    data: { hName: "div", hProperties: { className: ["sig-block"] } },
+    children,
+  };
+  return block;
+}
+
+/** Drops trailing whitespace, including whitespace-only text nodes. */
+function trimEnd(nodes: PhrasingContent[]) {
+  const out = [...nodes];
+  while (out.length) {
+    const last = out.at(-1)!;
+    if (last.type !== "text") break;
+    const value = last.value.replace(/\s+$/, "");
+    if (value) {
+      out[out.length - 1] = { ...last, value };
+      break;
+    }
+    out.pop();
+  }
+  return out;
+}
+
+const isParagraph = (node: unknown): node is Paragraph =>
+  (node as { type?: string }).type === "paragraph";
+
+const hasChildren = (node: unknown): node is Parent =>
+  Array.isArray((node as Partial<Parent>).children);
 
 /**
  * Replaces underscore runs with sized, unbreakable rule elements.
@@ -100,7 +208,7 @@ export const SignatureLines: QuartzTransformerPlugin<Partial<SignatureLinesOptio
   return {
     name: "SignatureLines",
     markdownPlugins(): PluggableList {
-      return [remarkSignatureLines(options)];
+      return [remarkMarkers, remarkSignatureLines(options)];
     },
     externalResources() {
       const font = options.placeholderFont;

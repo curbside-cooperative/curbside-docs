@@ -74,6 +74,29 @@
   user-select: none;
 }
 
+// A signature block: `Label: ____` lines whose rules all end at the same
+// position: the right edge of the content column. Labels take their natural
+// width and the rules fill the rest, so the block ignores how many
+// underscores the author typed.
+.sig-block {
+  display: grid;
+  grid-template-columns: fit-content(60%) minmax(8ch, 1fr);
+  column-gap: 1ch;
+  row-gap: 0.75em;
+  align-items: baseline;
+  margin: 1rem 0;
+
+  > .sig-line {
+    width: auto;
+  }
+}
+
+// `{{page_break}}`: a quiet divider on screen and a real break in print.
+.page-break {
+  margin: 2.5rem 0;
+  border-top: 1px dashed var(--lightgray);
+}
+
 // These are documents people print and sign on paper: blank rules, no hints.
 @media print {
   .sig-line::after {
@@ -90,7 +113,13 @@
   }
 
   // Don't split a signature block across a page boundary.
-  .sig-field {
+  .sig-block {
     break-inside: avoid;
+  }
+
+  .page-break {
+    margin: 0;
+    border: 0;
+    break-after: page;
   }
 }

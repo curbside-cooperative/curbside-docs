@@ -1,4 +1,5 @@
 import type { Node } from "unist";
+import type { PhrasingContent } from "mdast";
 
 export interface SignatureLinesOptions {
   /**
@@ -45,6 +46,22 @@ export interface SignatureLineNode extends Node {
   type: "signatureLine";
 }
 
+/** `{{page_break}}` on a line of its own. */
+export interface PageBreakNode extends Node {
+  type: "pageBreak";
+}
+
+/** Consecutive `Label: ____` lines, laid out so their rules end together. */
+export interface SignatureBlockNode extends Node {
+  type: "signatureBlock";
+  children: Array<SignatureBlockLabelNode | SignatureLineNode>;
+}
+
+export interface SignatureBlockLabelNode extends Node {
+  type: "signatureBlockLabel";
+  children: PhrasingContent[];
+}
+
 // Register the node with mdast so it is a legal phrasing child and other
 // plugins downstream can see it.
 declare module "mdast" {
@@ -54,5 +71,13 @@ declare module "mdast" {
 
   interface RootContentMap {
     signatureLine: SignatureLineNode;
+    signatureBlock: SignatureBlockNode;
+    signatureBlockLabel: SignatureBlockLabelNode;
+    pageBreak: PageBreakNode;
+  }
+
+  interface BlockContentMap {
+    signatureBlock: SignatureBlockNode;
+    pageBreak: PageBreakNode;
   }
 }

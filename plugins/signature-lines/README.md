@@ -50,6 +50,32 @@ the source still previews as a blank. The braces must touch the underscores:
 `______ ("Supplier")` is prose and is left alone. Unlabelled runs keep
 working, so labels can be added incrementally.
 
+## Signature blocks
+
+Two or more consecutive lines that each read `Label: ____` are a block, and
+nothing may follow the rule. They can be joined by hard breaks or written as
+separate paragraphs:
+
+```
+Name (please print): ___________________________
+Signature: ____________________________
+Date: ______________
+```
+
+A block renders as a grid: labels at their natural width, and rules filling
+the rest so they all end at the right edge of the content column. Run lengths are ignored, and
+every rule in a block is a field. A line with prose or a second field after
+its rule (`Gardener signature: ____ Date: ____`) is not a block line.
+
+## Markers
+
+This package also renders the `{{markers}}` that the Google Docs importer
+passes through (see DEVELOPMENT.md): `{{page_break}}` becomes
+`<div class="page-break">`, and a trailing `{{2.4}}` on a heading becomes
+`data-section="2.4"`. That leaves the heading's slug `id` alone, so
+table-of-contents links still work. Markers run first, before
+table-of-contents and description read the tree.
+
 ## Options
 
 | Option               | Default | Meaning                                        |
